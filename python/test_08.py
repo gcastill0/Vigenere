@@ -1,3 +1,5 @@
+import argparse
+
 def generate_cypher_primitives():
     """
     Generates a list of cypher primitives, which are uppercase letters from A to Z.
@@ -122,17 +124,102 @@ def generate_encryption_key(cypher_key=None, plain_text=None):
 
     return encryption_key
 
+def encrypt(plain_text, encryption_key):
+    """
+    Encrypts the plain text using the Vigenère cipher algorithm with the provided encryption key.
+    Args:
+        plain_text (str): The text to be encrypted.
+        encryption_key (list): The key used for encryption.
+    Returns:
+        str: The encrypted text.
+    """
+    encrypted_text = []
+    
+    for i in range(len(plain_text)):
+        # Calculate the encrypted character using the Vigenère cipher formula
+        plain_char = plain_text[i]
+        row_index  = cypher_matrix[0].index(plain_char)
+        col_index  = cypher_matrix[0].index(encryption_key[i])
+        encrypted_char = cypher_matrix[row_index][col_index]
+        encrypted_text.append(encrypted_char)
+
+    return ''.join(encrypted_text)
+
+def decrypt(encrypted_text, encryption_key):
+    """
+    Decrypts the encrypted text using the Vigenère cipher algorithm with the provided encryption key.
+    Args:
+        encrypted_text (str): The text to be decrypted.
+        encryption_key (list): The key used for decryption.
+    Returns:
+        str: The decrypted text.
+    """
+    decrypted_text = []
+    cypher_primitives_length = len(generate_cypher_primitives())
+    
+    for i in range(len(encrypted_text)):
+        # Calculate the decrypted character using the Vigenère cipher formula
+        col_index  = cypher_matrix[0].index(encryption_key[i])
+        char_index  = cypher_matrix[col_index].index(encrypted_text[i]) 
+        decrypted_char = cypher_matrix[0][char_index]
+        decrypted_text.append(decrypted_char)
+    
+    return ''.join(decrypted_text)
+
+def get_user_input(prompt = None):
+    """
+    Gets user input from the console.
+    Args:
+        prompt (str): The prompt to display to the user.
+    Returns:
+        str: The user input.
+    """
+    if prompt is None:
+        raise TypeError("Prompt must be a string.")
+    
+    if not isinstance(prompt, str):
+        raise TypeError("Prompt must be a string.")
+    
+    user_input = input(prompt)
+
+    if not user_input:
+        raise ValueError("Input cannot be empty.")
+        
+    return user_input
+
 def main():
     """
     Main function to execute the print_cypher_matrix function.
     """
-    cypher_primitives = generate_cypher_primitives()    
+    global cypher_matrix
+
+    cypher_primitives = generate_cypher_primitives()
     cypher_matrix = generate_cypher_matrix(cypher_primitives)
     cypher_key = generate_cypher_key()
-    plain_text = generate_plain_text()
-    encryption_key = generate_encryption_key(cypher_key, plain_text)
-    print(plain_text)
-    print(encryption_key)
+
+    parser = argparse.ArgumentParser()
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-e', '--encrypt', nargs='+', help='Encrypt the input string.')
+    group.add_argument('-d', '--decrypt', nargs='+', help='Decrypt the input string.')
+
+    args = parser.parse_args()
+
+    if args.encrypt:
+        input_string = ' '.join(args.encrypt)
+
+        # encrypt(input_string)
+        encryption_key = generate_encryption_key(cypher_key, input_string)
+        encrypted_text = encrypt(prepare_plain_text(input_string), encryption_key)
+        print(encrypted_text)
+
+    elif args.decrypt:
+        input_string = ' '.join(args.decrypt)
+
+        # decrypt(input_string)
+        encryption_key = generate_encryption_key(cypher_key, input_string)
+        decrypted_text = decrypt(prepare_plain_text(input_string), encryption_key)
+        print(decrypted_text)
 
 if __name__ == "__main__":
     main()
