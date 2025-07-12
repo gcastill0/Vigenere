@@ -88,6 +88,24 @@ def prepare_plain_text(plain_text):
     
     return plain_text
 
+def generate_encryption_key(cypher_key=None, plain_text=None):
+    if not cypher_key:
+        cypher_key = generate_cypher_key()
+    
+    if not plain_text:
+        plain_text = generate_plain_text()
+
+    # Prepare the plain text by removing non-alphabetic characters and converting to uppercase
+    plain_text = prepare_plain_text(plain_text)
+
+    encryption_key = []
+
+    for i in range(len(plain_text)):
+        ii = i % len(cypher_key)
+        encryption_key.append(cypher_key[ii])
+
+    return encryption_key
+
 def main():
     """
     Main function to execute the print_cypher_matrix function.
@@ -96,7 +114,8 @@ def main():
     cypher_matrix = generate_cypher_matrix(cypher_primitives)
     cypher_key = generate_cypher_key()
     plain_text = generate_plain_text()
-    print(prepare_plain_text(plain_text))
+    encryption_key = generate_encryption_key(cypher_key, plain_text)
+    print(encryption_key)
 
 if __name__ == "__main__":
     main()
