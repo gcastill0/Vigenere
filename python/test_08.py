@@ -199,7 +199,7 @@ def main():
 
     parser = argparse.ArgumentParser()
 
-    group = parser.add_mutually_exclusive_group(required=True)
+    group = parser.add_mutually_exclusive_group()
     group.add_argument('-e', '--encrypt', nargs='+', help='Encrypt the input string.')
     group.add_argument('-d', '--decrypt', nargs='+', help='Decrypt the input string.')
 
@@ -220,6 +220,16 @@ def main():
         encryption_key = generate_encryption_key(cypher_key, input_string)
         decrypted_text = decrypt(prepare_plain_text(input_string), encryption_key)
         print(decrypted_text)
+
+    else:
+        # Default demo mode
+        demo_string = "This is a demo message!"
+        print(f"Running in demo mode with default string: {demo_string}")
+
+        # encrypt(demo_string)
+        encryption_key = generate_encryption_key(cypher_key, demo_string)
+        encrypted_text = encrypt(prepare_plain_text(demo_string), encryption_key)
+        print(encrypted_text)
 
 if __name__ == "__main__":
     main()
