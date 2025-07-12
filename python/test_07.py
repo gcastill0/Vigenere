@@ -47,7 +47,7 @@ def generate_cypher_key(cypher_key = None):
         str: The processed cipher key, with spaces removed and all letters in uppercase.
     """
     if not cypher_key:
-        cypher_key = 'MOOSE'
+        cypher_key = 'correct horse battery staple!'
 
     # Replace non-alphabetic characters with spaces
     for char in cypher_key:
@@ -66,7 +66,7 @@ def generate_plain_text(plain_text=None):
         str: The plain text string.
     """
     if not plain_text:
-        plain_text = "Blue blue windows behind the stars."
+        plain_text = "This is a test string for the cypher matrix and key generation."
     
     return plain_text
 
