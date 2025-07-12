@@ -89,6 +89,17 @@ def prepare_plain_text(plain_text):
     return plain_text
 
 def generate_encryption_key(cypher_key=None, plain_text=None):
+    """
+    Generates an encryption key for the Vigenère cipher by repeating or truncating the given cypher key to match the length of the prepared plain text.
+    Args:
+        cypher_key (str, optional): The key used for encryption. If not provided, a new cypher key is generated.
+        plain_text (str, optional): The text to be encrypted. If not provided, a new plain text is generated.
+    Returns:
+        list: A list of characters representing the encryption key, aligned with the length of the prepared plain text.
+    Notes:
+        - The plain text is preprocessed to remove non-alphabetic characters and convert it to uppercase.
+        - The cypher key is repeated as necessary to match the length of the prepared plain text.
+    """
     if not cypher_key:
         cypher_key = generate_cypher_key()
     
@@ -101,7 +112,12 @@ def generate_encryption_key(cypher_key=None, plain_text=None):
     encryption_key = []
 
     for i in range(len(plain_text)):
+
+        # Calculate the index in the cypher key by using modulo operation
+        # This ensures that if the plain text is longer than the cypher key,
+        # the key will repeat as necessary.
         ii = i % len(cypher_key)
+
         encryption_key.append(cypher_key[ii])
 
     return encryption_key
